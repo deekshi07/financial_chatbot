@@ -1,7 +1,9 @@
 import streamlit as st
 from pdf_processor import extract_text_from_pdf, extract_financial_insights
 from financial_api import fetch_financial_data
-from chatbot import get_chatbot_response  # Import the function from chatbot.py
+from chatbot import get_chatbot_response
+import nltk
+nltk.download('punkt')# Import the function from chatbot.py
 
 # Title of the application
 st.title("📊 AI-Powered Financial Insights Chatbot")
