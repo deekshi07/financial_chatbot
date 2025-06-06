@@ -1,0 +1,7 @@
+streamlit
+requests
+yfinance
+python-dotenv
+PyMuPDF
+nltk
+#https://docs.google.com/document/d/1gdNSMxLXs-xb6DW974vpYXiWdwrXYvKqEO1Kf6drqdw/edit?tab=t.0#heading=h.mql9f4alzh68
