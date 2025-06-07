@@ -4,19 +4,30 @@ from financial_api import fetch_financial_data
 from chatbot import get_chatbot_response
 import nltk
 import traceback
-import sys
 
 # Safely ensure NLTK's 'punkt' is available
 def setup_nltk():
     try:
-        nltk.data.find('tokenizers/punkt_tab')  # Checks if 'punkt' is available
+        nltk.data.find('tokenizers/punkt_tab')
     except LookupError:
-        nltk.download('punkt_tab')  # Downloads if not found
+        nltk.download('punkt_tab')
     except Exception:
         st.error("❗ NLTK setup failed")
         st.text(traceback.format_exc())
 
 setup_nltk()
+
+# Define a set of financial keywords for filtering queries
+financial_keywords = {
+    "revenue", "earnings", "profit", "loss", "net income", "gross margin",
+    "ebitda", "dividend", "expenses", "cost of goods sold", "assets", "liabilities",
+    "equity", "return on investment", "cash flow", "balance sheet", "financial statement",
+    "stock", "shares", "investment", "portfolio", "market", "finance", "financial", "funds"
+}
+
+def is_financial_query(query):
+    query_lower = query.lower()
+    return any(keyword in query_lower for keyword in financial_keywords)
 
 # Title of the application
 st.title("📊 AI-Powered Financial Insights Chatbot")
@@ -24,7 +35,6 @@ st.title("📊 AI-Powered Financial Insights Chatbot")
 # Radio button for mode selection
 option = st.radio("Choose Mode:", ["📄 PDF Upload Mode", "🌐 Live Data Mode", "💬 Chatbot Mode"])
 
-# PDF Upload Mode
 if option == "📄 PDF Upload Mode":
     uploaded_file = st.file_uploader("Upload Earnings Report (PDF)", type=["pdf"])
     if uploaded_file:
@@ -40,7 +50,6 @@ if option == "📄 PDF Upload Mode":
         except Exception as e:
             st.error(f"Error processing the PDF: {str(e)}")
 
-# Live Data Mode
 elif option == "🌐 Live Data Mode":
     company_symbol = st.text_input("Enter Company Symbol (e.g., AAPL, TSLA)")
     if st.button("Fetch Data"):
@@ -56,15 +65,17 @@ elif option == "🌐 Live Data Mode":
         else:
             st.error("Please enter a valid company symbol.")
 
-# Chatbot Mode
 elif option == "💬 Chatbot Mode":
     user_query = st.text_input("Ask a financial question:")
     if st.button("Get Response"):
         if user_query:
-            try:
-                response = get_chatbot_response(user_query)
-                st.text_area("Chatbot Response", response, height=200)
-            except Exception as e:
-                st.error(f"Error getting chatbot response: {str(e)}")
+            if is_financial_query(user_query):
+                try:
+                    response = get_chatbot_response(user_query)
+                    st.text_area("Chatbot Response", response, height=200)
+                except Exception as e:
+                    st.error(f"Error getting chatbot response: {str(e)}")
+            else:
+                st.warning("⚠️ Sorry, I can only answer financial related questions.")
         else:
             st.error("Please enter a question to ask the chatbot.")
