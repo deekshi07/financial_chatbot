@@ -39,12 +39,14 @@ if option == "📄 PDF Upload Mode":
     uploaded_file = st.file_uploader("Upload Earnings Report (PDF)", type=["pdf"])
     if uploaded_file:
         try:
+            # Extract full text from PDF
             extracted_text = extract_text_from_pdf(uploaded_file)
             st.subheader("Extracted Text from PDF:")
             st.text_area("Extracted Text", extracted_text, height=300)
 
+            # Get structured financial insights summary
             financial_insights = extract_financial_insights(extracted_text)
-            st.subheader("Financial Insights:")
+            st.subheader("Financial Insights Summary:")
             st.text_area("Financial Insights", financial_insights, height=300)
 
         except Exception as e:

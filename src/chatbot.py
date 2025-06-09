@@ -26,7 +26,7 @@ def get_chatbot_response(user_query):
 
         # Added system message for restricting responses to finance domain
         data = {
-            "model": "llama-3.3-70b-versatile",
+            "model": "llama3-8b-8192",
             "messages": [
                 {
                     "role": "system",
